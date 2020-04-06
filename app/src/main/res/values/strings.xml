@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Chat Application</string>
+    <string name="btn_label_login">Login</string>
+    <string name="btn_label_register">Register</string>
+    <string name="et_email">Email</string>
+    <string name="et_pw">Password</string>
+    <string name="btn_register">Sign Up</string>
+    <string name="home_welcome">Welcome!! You\'ve been logged in.</string>
+</resources>

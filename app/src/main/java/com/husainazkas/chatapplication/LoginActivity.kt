@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,7 +29,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login() {
-        auth.signInWithEmailAndPassword(et_login_email.text.toString().trim(), et_login_pw.text.toString())
+        val email = et_login_email.text.toString().trim()
+        val password = et_login_pw.text.toString()
+        auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener() {
                 if (it.isSuccessful) {
                     Toast.makeText(this, "Login Successful", Toast.LENGTH_LONG).show()

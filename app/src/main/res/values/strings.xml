@@ -6,4 +6,7 @@
     <string name="et_pw">Password</string>
     <string name="btn_register">Sign Up</string>
     <string name="home_welcome">Welcome!! You\'ve been logged in.</string>
+    <string name="et_name">Nama Tampilan</string>
+    <string name="nav_home_message">Message</string>
+    <string name="nav_home_signOut">Sign Out</string>
 </resources>

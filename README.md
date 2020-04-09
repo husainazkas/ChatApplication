@@ -15,4 +15,9 @@ Version 1.2 beta changelog :
 6. New design in HomeActivity
 7. Start app from HomeActivity (on develop)
 
+Version 1.2.1 beta changelog :
+1. Added new function to prevent some bugs in LoginActivity
+2. Completely start app from HomeActivity if logged in
+3. Sign Out function
+
 Please note if you made a change

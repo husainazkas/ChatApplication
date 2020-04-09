@@ -53,6 +53,12 @@
             android:id="@+id/btn_register"
             android:text="@string/btn_register"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/create_account"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

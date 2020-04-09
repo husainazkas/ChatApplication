@@ -3,25 +3,18 @@ package com.husainazkas.chatapplication
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_register.*
-import java.io.File
 import java.lang.Exception
-import java.net.URI
 import java.util.*
 import java.util.regex.Pattern
 
@@ -98,25 +91,25 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun emptyField() {
         val name = et_register_name.text
-        val mail = et_register_email.text
+        val email = et_register_email.text
         val pw = et_register_pw.text
 
             if (
                 name.isNullOrBlank() ||
-                mail.isNullOrBlank() ||
+                email.isNullOrBlank() ||
                 pw.isNullOrBlank()
             ) {
                 et_register_name.error = "What's your name?"
                 et_register_name.requestFocus()
                 et_register_email.error = "You'll need this when you login"
                 et_register_email.requestFocus()
-                et_register_pw.error = "You must set a password to login. Password must at least 6 characters"
+                et_register_pw.error = "You must set a password to login"
                 et_register_pw.requestFocus()
-            } else if (!emailPattern.matcher(mail).matches()) {
+            } else if (!emailPattern.matcher(email).matches()) {
                 et_register_email.error = "Invalid email address"
                 et_register_email.requestFocus()
             } else if (!passPattern.matcher(pw).matches()) {
-                et_register_pw.error = "Password harus 6 digit atau lebih"
+                et_register_pw.error = "Password must at least 6 characters"
                 et_register_pw.requestFocus()
             } else {
                 registerUserToFirebase()
@@ -129,7 +122,7 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {
-                    Toast.makeText(this, "Register has been successful", Toast.LENGTH_LONG).show()
+                    // register has been successful
                     uploadPhotoToFirebase()
                 } else {
                     Toast.makeText(this, it.result.toString(), Toast.LENGTH_LONG).show()
@@ -148,9 +141,12 @@ class RegisterActivity : AppCompatActivity() {
         uploadToFirebase.putFile(PHOTO_URI!!)
             .addOnSuccessListener {
                 uploadToFirebase.downloadUrl.addOnSuccessListener {
-                    Toast.makeText(this, "$it", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Upload photo has been successful", Toast.LENGTH_SHORT).show()
                     saveAllUserToDatabase(it.toString())
                 }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
             }
     }
 
@@ -158,10 +154,11 @@ class RegisterActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().uid
         val db = FirebaseDatabase.getInstance().getReference("user/$user")
 
-        db.setValue(UserData(name = et_register_name.toString(), email = et_register_email.toString(), ava = photoUrl))
+        db.setValue(UserData(name = et_register_name.text.toString(), email = et_register_email.text.toString(), ava = photoUrl))
             .addOnSuccessListener {
-                HomeActivity.launchIntent(this)
-                Toast.makeText(this, "Data berhasil disimpan", Toast.LENGTH_LONG).show()
+                HomeActivity.launchIntentClearTask(this)
+                // Data has been saved
+                Toast.makeText(this, "Register has been successful", Toast.LENGTH_LONG).show()
             }
             .addOnFailureListener {
                 Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()

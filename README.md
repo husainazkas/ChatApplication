@@ -20,4 +20,7 @@ Version 1.2.1 beta changelog :
 2. Completely start app from HomeActivity if logged in
 3. Sign Out function
 
+Version 1.2.2 beta changelog :
+1. Added Friendlist from Firebase Database
+
 Please note if you made a change

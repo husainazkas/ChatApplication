@@ -10,4 +10,6 @@
     <string name="nav_home_message">Message</string>
     <string name="nav_home_signOut">Sign Out</string>
     <string name="invalid_login">Invalid email or password</string>
+    <string name="btn_register_select_photo">SELECT PHOTO</string>
+    <string name="friend_list_nama_teman">Nama Teman</string>
 </resources>

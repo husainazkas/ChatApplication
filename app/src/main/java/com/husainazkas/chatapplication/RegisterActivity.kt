@@ -9,6 +9,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.widget.ImageButton
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -46,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
         btn_register.setOnClickListener {
             emptyField()
         }
-        iv_register_avatar.setOnClickListener {
+        btn_register_ava.setOnClickListener {
             getPhotoFromFile()
         }
     }
@@ -61,17 +63,19 @@ class RegisterActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_PHOTO) {
-            if (resultCode == Activity.RESULT_OK && data!!.data !=null){
+            if (resultCode == Activity.RESULT_OK && data!!.data != null){
                 PHOTO_URI = data.data
                 try {
                     PHOTO_URI?.let {
                         if (Build.VERSION.SDK_INT < 28) {
                             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, PHOTO_URI)
-                            iv_register_avatar.setImageBitmap(bitmap)
+                            circleImageView.setImageBitmap(bitmap)
+                            btn_register_ava.alpha = 0f
                         } else {
                             val source = ImageDecoder.createSource(contentResolver, PHOTO_URI!!)
                             val bitmap = ImageDecoder.decodeBitmap(source)
-                            iv_register_avatar.setImageBitmap(bitmap)
+                            circleImageView.setImageBitmap(bitmap)
+                            btn_register_ava.alpha = 0f
                         }
                     }
                 } catch (e: Exception) {
@@ -79,14 +83,6 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
-
-        /*if (requestCode == PICK_CAMERA) {
-            if (resultCode == Activity.RESULT_OK){
-                val file = File(PICK_CAMERA)
-                val uri = Uri.fromFile(file)
-                iv_register_avatar.setImageURI(uri)
-            }
-        }*/
     }
 
     private fun emptyField() {
@@ -94,26 +90,26 @@ class RegisterActivity : AppCompatActivity() {
         val email = et_register_email.text
         val pw = et_register_pw.text
 
-            if (
-                name.isNullOrBlank() ||
-                email.isNullOrBlank() ||
-                pw.isNullOrBlank()
-            ) {
-                et_register_name.error = "What's your name?"
-                et_register_name.requestFocus()
-                et_register_email.error = "You'll need this when you login"
-                et_register_email.requestFocus()
-                et_register_pw.error = "You must set a password to login"
-                et_register_pw.requestFocus()
-            } else if (!emailPattern.matcher(email).matches()) {
-                et_register_email.error = "Invalid email address"
-                et_register_email.requestFocus()
-            } else if (!passPattern.matcher(pw).matches()) {
-                et_register_pw.error = "Password must at least 6 characters"
-                et_register_pw.requestFocus()
-            } else {
-                registerUserToFirebase()
-            }
+        if (
+            name.isNullOrBlank() ||
+            email.isNullOrBlank() ||
+            pw.isNullOrBlank()
+        ) {
+            et_register_name.error = "What's your name?"
+            et_register_name.requestFocus()
+            et_register_email.error = "You'll need this when you login"
+            et_register_email.requestFocus()
+            et_register_pw.error = "You must set a password to login"
+            et_register_pw.requestFocus()
+        } else if (!emailPattern.matcher(email).matches()) {
+            et_register_email.error = "Invalid email address"
+            et_register_email.requestFocus()
+        } else if (!passPattern.matcher(pw).matches()) {
+            et_register_pw.error = "Password must at least 6 characters"
+            et_register_pw.requestFocus()
+        } else {
+            registerUserToFirebase()
+        }
     }
 
     private fun registerUserToFirebase() {
@@ -123,6 +119,7 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {
                     // register has been successful
+                    Log.d("RegisterActivity", "Successfully Register User to Firebase")
                     uploadPhotoToFirebase()
                 } else {
                     Toast.makeText(this, it.result.toString(), Toast.LENGTH_LONG).show()
@@ -138,23 +135,29 @@ class RegisterActivity : AppCompatActivity() {
         val photoName = UUID.randomUUID().toString()
         val uploadToFirebase = FirebaseStorage.getInstance().getReference("chatApp/images/$photoName")
 
-        uploadToFirebase.putFile(PHOTO_URI!!)
-            .addOnSuccessListener {
-                uploadToFirebase.downloadUrl.addOnSuccessListener {
-                    Toast.makeText(this, "Upload photo has been successful", Toast.LENGTH_SHORT).show()
-                    saveAllUserToDatabase(it.toString())
+        PHOTO_URI?.let {
+            uploadToFirebase.putFile(it)
+                .addOnSuccessListener {
+                    uploadToFirebase.downloadUrl.addOnSuccessListener {
+                        Toast.makeText(this, "Upload photo has been successful", Toast.LENGTH_SHORT)
+                            .show()
+                        saveAllUserToDatabase(it.toString())
+                    }
                 }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-            }
+                .addOnFailureListener {
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                }
+        }
     }
 
     private fun saveAllUserToDatabase(photoUrl : String) {
         val user = FirebaseAuth.getInstance().uid
         val db = FirebaseDatabase.getInstance().getReference("user/$user")
 
-        db.setValue(UserData(name = et_register_name.text.toString(), email = et_register_email.text.toString(), ava = photoUrl))
+        db.setValue(UserData(
+            name = et_register_name.text.toString(),
+            email = et_register_email.text.toString(),
+            ava = photoUrl))
             .addOnSuccessListener {
                 HomeActivity.launchIntentClearTask(this)
                 // Data has been saved

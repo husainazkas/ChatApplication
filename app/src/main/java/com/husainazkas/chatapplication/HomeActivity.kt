@@ -35,10 +35,14 @@ class HomeActivity : AppCompatActivity() {
                 signOutUser()
             }
             R.id.nav_message ->{
-
+                messageToFriend()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun messageToFriend() {
+        FriendListActivity.launchIntent(this)
     }
 
     private fun signOutUser() {

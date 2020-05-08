@@ -13,7 +13,7 @@ import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_friend_list.*
-import kotlinx.android.synthetic.main.friend_list.*
+import kotlinx.android.synthetic.main.item_friend_list.*
 
 class FriendListActivity : AppCompatActivity() {
 
@@ -40,6 +40,11 @@ class FriendListActivity : AppCompatActivity() {
                     val userdata = it.getValue(UserData::class.java) as UserData
                     adapter.add(AdapterFriendList(userdata))
                 }
+
+                adapter.setOnItemClickListener { item, view ->
+                    ChatRoomActivity.launchIntent(view.context)
+                }
+
                 rv_friend_list.adapter = adapter
             }
 

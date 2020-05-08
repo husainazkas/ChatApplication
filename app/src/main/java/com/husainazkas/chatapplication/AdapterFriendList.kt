@@ -3,11 +3,11 @@ package com.husainazkas.chatapplication
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.friend_list.view.*
+import kotlinx.android.synthetic.main.item_friend_list.view.*
 
 class AdapterFriendList(val userData: UserData) : Item<ViewHolder>() {
     override fun getLayout(): Int {
-        return R.layout.friend_list
+        return R.layout.item_friend_list
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {

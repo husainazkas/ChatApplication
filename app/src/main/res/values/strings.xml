@@ -12,4 +12,6 @@
     <string name="invalid_login">Invalid email or password</string>
     <string name="btn_register_select_photo">SELECT PHOTO</string>
     <string name="friend_list_nama_teman">Nama Teman</string>
+    <string name="example_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="chat_room_send">Send</string>
 </resources>

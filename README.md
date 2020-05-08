@@ -25,4 +25,7 @@ On develop stage but no errors detected.
 ### Version 1.2.2 beta changelog :
 - Added Friendlist from Firebase Database
 
+### Version 1.2.3.1 beta changelog :
+- Added Chat Room without fetch Data
+
 Please note if you made a change

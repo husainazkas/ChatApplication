@@ -63,11 +63,6 @@ class HomeActivity : AppCompatActivity() {
 
     companion object {
 
-        fun launchIntent(context: Context) {
-            val intent = Intent(context, HomeActivity::class.java)
-            context.startActivity(intent)
-        }
-
         fun launchIntentClearTask(context: Context) {
             val intent = Intent(context, HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)

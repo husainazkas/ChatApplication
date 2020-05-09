@@ -14,4 +14,5 @@
     <string name="friend_list_nama_teman">Nama Teman</string>
     <string name="example_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="chat_room_send">Send</string>
+    <string name="nav_home_settings">Settings</string>
 </resources>

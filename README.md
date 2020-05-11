@@ -1,6 +1,8 @@
 # Chat Application
-On develop stage but no errors detected.
+**ERROR DETECTED** on Android Version 5.1.
 
+Changelog
+-------
 ### Version 1.0 changelog :
 - Main, Login, Register, and Home activity has been created
 - Connected to my Firebase
@@ -31,4 +33,9 @@ On develop stage but no errors detected.
 ### Version 1.2.3.2 beta changelog :
 - Optimize UI Design v1.0
 
-Please note if you made a change
+### Version 1.2.3.4 beta changelog :
+- Fetch data chat from Database
+- Chat from User to User (Privately chatting)
+- Fix some errors but still unstable
+-------
+Please note if you made a change.

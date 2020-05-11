@@ -21,6 +21,7 @@
         app:layout_constraintGuide_percent="0.92"/>
 
     <EditText
+        android:id="@+id/et_chat_room_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_weight="1"
@@ -32,6 +33,7 @@
         android:layout_marginEnd="8dp"/>
 
     <Button
+        android:id="@+id/btn_chat_room_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/chat_room_send"

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Adapter
 import android.widget.AdapterView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -37,12 +38,20 @@ class FriendListActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 p0.children.forEach {
+                    val uid = FirebaseAuth.getInstance().uid
                     val userdata = it.getValue(UserData::class.java) as UserData
-                    adapter.add(AdapterFriendList(userdata))
+                    if (userdata.uid != uid) {
+                        adapter.add(AdapterFriendList(userdata))
+                    }
                 }
 
                 adapter.setOnItemClickListener { item, view ->
-                    ChatRoomActivity.launchIntent(view.context)
+
+                    val friendname = item as AdapterFriendList
+                    val intent = Intent(view.context, ChatRoomActivity::class.java)
+                    intent.putExtra(FRIEND_KEY, friendname.userData)
+                    startActivity(intent)
+
                 }
 
                 rv_friend_list.adapter = adapter
@@ -53,6 +62,7 @@ class FriendListActivity : AppCompatActivity() {
 
     companion object {
 
+        val FRIEND_KEY = "friend_key"
         fun launchIntent(context: Context) {
             val intent = Intent(context, FriendListActivity::class.java)
             context.startActivity(intent)

@@ -133,7 +133,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun uploadPhotoToFirebase() {
 
         val photoName = UUID.randomUUID().toString()
-        val uploadToFirebase = FirebaseStorage.getInstance().getReference("chatApp/images/$photoName")
+        val uploadToFirebase = FirebaseStorage.getInstance().getReference("/chatApp/images/$photoName")
 
         PHOTO_URI?.let {
             uploadToFirebase.putFile(it)
@@ -152,9 +152,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun saveAllUserToDatabase(photoUrl : String) {
         val user = FirebaseAuth.getInstance().uid
-        val db = FirebaseDatabase.getInstance().getReference("user/$user")
+        val db = FirebaseDatabase.getInstance().getReference("/user/$user")
 
         db.setValue(UserData(
+            uid = user.toString(),
             name = et_register_name.text.toString(),
             email = et_register_email.text.toString(),
             ava = photoUrl))

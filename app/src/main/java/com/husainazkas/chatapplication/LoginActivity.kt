@@ -72,6 +72,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     companion object {
+        lateinit var currentUser : UserData
         fun launchIntent(context: Context) {
             val intent = Intent(context, LoginActivity::class.java)
             context.startActivity(intent)

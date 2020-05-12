@@ -37,5 +37,8 @@ Changelog
 - Fetch data chat from Database
 - Chat from User to User (Privately chatting)
 - Fix some errors but still unstable
+
+### Version 1.2.4 beta changelog :
+- Added recent chat from HomeActivity (on develop)
 -------
 Please note if you made a change.

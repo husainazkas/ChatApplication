@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_chat_room.*
 
 class ChatRoomActivity : AppCompatActivity() {
 
-    lateinit var friend : UserData
     val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,19 +84,25 @@ class ChatRoomActivity : AppCompatActivity() {
         val text = et_chat_room_text.text.toString()
         val time = System.currentTimeMillis()/1000
 
-        messageDbReferenceMe.setValue(
-            MessageData(id, fromId, text, toId, time)
-        )
+        messageDbReferenceMe.setValue(MessageData(id, fromId, text, toId, time))
             .addOnSuccessListener {
                 Toast.makeText(this, "Message has sent", Toast.LENGTH_LONG).show()
                 messageDbReferenceFriend.setValue(
                     MessageData(id, fromId, text, toId, time)
                 )
             }
+
+        val lastMessage = FirebaseDatabase.getInstance().getReference("/recent-message/$fromId/$toId/")
+        val lastMessageTo = FirebaseDatabase.getInstance().getReference("/recent-message/$toId/$fromId/")
+        lastMessage.setValue(MessageData(id, fromId, text, toId, time))
+            .addOnSuccessListener {
+                lastMessageTo.setValue(MessageData(id, fromId, text, toId, time))
+            }
     }
 
     companion object {
 
+        lateinit var friend : UserData
         /*fun launchIntent(context: Context) {
             val intent = Intent(context, ChatRoomActivity::class.java)
             context.startActivity(intent)

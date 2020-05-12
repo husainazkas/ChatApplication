@@ -8,21 +8,62 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.husainazkas.chatapplication.LoginActivity.Companion.currentUser
+import com.husainazkas.chatapplication.ChatRoomActivity.Companion.friend
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
 
     val uid = FirebaseAuth.getInstance().uid
+    val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         checkUserLoginAccount()
+
+        recentChat()
+    }
+
+    private fun recentChat() {
+
+        val lastChat = FirebaseDatabase.getInstance().getReference("/recent-message/$uid")
+
+        lastChat.addChildEventListener(object : ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                val lastMessage = p0.getValue(MessageData::class.java)
+
+                adapter.add(AdapterRecentChat(lastMessage!!))
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                val lastMessage = p0.getValue(MessageData::class.java)
+
+                adapter.add(AdapterRecentChat(lastMessage!!))
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                val lastMessage = p0.getValue(MessageData::class.java)
+
+                adapter.remove(AdapterRecentChat(lastMessage!!))
+            }
+
+        })
+
+        rv_home_chat_list.adapter = adapter
+
     }
 
     private fun fetchUser() {

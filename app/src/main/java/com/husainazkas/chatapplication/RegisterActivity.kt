@@ -115,6 +115,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUserToFirebase() {
         val email = et_register_email.text.toString().trim()
         val password = et_register_pw.text.toString()
+        Toast.makeText(this, "Registering your account. Please wait...", Toast.LENGTH_LONG).show()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
                 if (it.isSuccessful) {

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.ImageButton
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -22,9 +21,8 @@ import java.util.regex.Pattern
 
 class RegisterActivity : AppCompatActivity() {
 
-    val auth = FirebaseAuth.getInstance()
-    val PICK_PHOTO = 100
-    val PICK_CAMERA = 101
+    val pickPhoto = 100
+    //val PICK_CAMERA = 101
     var PHOTO_URI : Uri? = null
     val passPattern = Pattern.compile("^" + ".{6,}" + "$")
     val emailPattern = Pattern.compile("[a-zA-Z0-9\\.\\_\\%\\-\\+]{1,256}" +
@@ -40,41 +38,37 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        initView()
-
-    }
-
-    private fun initView() {
-        btn_register.setOnClickListener {
-            emptyField()
-        }
         btn_register_ava.setOnClickListener {
             getPhotoFromFile()
+        }
+        btn_register.setOnClickListener {
+            emptyField()
         }
     }
 
     private fun getPhotoFromFile() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, PICK_PHOTO)
+        startActivityForResult(intent, pickPhoto)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == PICK_PHOTO) {
+        if (requestCode == pickPhoto) {
             if (resultCode == Activity.RESULT_OK && data!!.data != null){
                 PHOTO_URI = data.data
                 try {
-                    PHOTO_URI?.let {
+                    PHOTO_URI.let {
                         if (Build.VERSION.SDK_INT < 28) {
-                            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, PHOTO_URI)
-                            circleImageView.setImageBitmap(bitmap)
+                            val bitmap =
+                                MediaStore.Images.Media.getBitmap(contentResolver, PHOTO_URI)
+                            civ_register_ava.setImageBitmap(bitmap)
                             btn_register_ava.alpha = 0f
                         } else {
                             val source = ImageDecoder.createSource(contentResolver, PHOTO_URI!!)
                             val bitmap = ImageDecoder.decodeBitmap(source)
-                            circleImageView.setImageBitmap(bitmap)
+                            civ_register_ava.setImageBitmap(bitmap)
                             btn_register_ava.alpha = 0f
                         }
                     }
@@ -99,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
             et_register_name.requestFocus()
             et_register_email.error = "You'll need this when you login"
             et_register_email.requestFocus()
-            et_register_pw.error = "You must set a password to login"
+            et_register_pw.error = "You must set a password"
             et_register_pw.requestFocus()
         } else if (!emailPattern.matcher(email).matches()) {
             et_register_email.error = "Invalid email address"
@@ -115,16 +109,12 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUserToFirebase() {
         val email = et_register_email.text.toString().trim()
         val password = et_register_pw.text.toString()
+        val auth = FirebaseAuth.getInstance()
+
         Toast.makeText(this, "Registering your account. Please wait...", Toast.LENGTH_LONG).show()
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    // register has been successful
-                    Log.d("RegisterActivity", "Successfully Register User to Firebase")
-                    uploadPhotoToFirebase()
-                } else {
-                    Toast.makeText(this, it.result.toString(), Toast.LENGTH_LONG).show()
-                }
+            .addOnSuccessListener {
+                uploadPhotoToFirebase()
             }
             .addOnFailureListener(this) {
                 Toast.makeText(this, it.message.toString(), Toast.LENGTH_LONG).show()
@@ -132,22 +122,19 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun uploadPhotoToFirebase() {
-
         val photoName = UUID.randomUUID().toString()
         val uploadToFirebase = FirebaseStorage.getInstance().getReference("/chatApp/images/$photoName")
 
-        PHOTO_URI?.let {
-            uploadToFirebase.putFile(it)
+        if (PHOTO_URI != null) {
+            uploadToFirebase.putFile(PHOTO_URI!!)
                 .addOnSuccessListener {
                     uploadToFirebase.downloadUrl.addOnSuccessListener {
-                        Toast.makeText(this, "Upload photo has been successful", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, "Upload photo has been successful", Toast.LENGTH_SHORT).show()
                         saveAllUserToDatabase(it.toString())
                     }
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                }
+        } else {
+            Toast.makeText(this, "Please select your photo", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -161,12 +148,11 @@ class RegisterActivity : AppCompatActivity() {
             email = et_register_email.text.toString(),
             ava = photoUrl))
             .addOnSuccessListener {
-                HomeActivity.launchIntentClearTask(this)
-                // Data has been saved
                 Toast.makeText(this, "Register has been successful", Toast.LENGTH_LONG).show()
+                HomeActivity.launchIntentClearTask(this)
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it.message.toString(), Toast.LENGTH_LONG).show()
             }
     }
 

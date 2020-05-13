@@ -13,7 +13,6 @@ import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
 
-    val auth = FirebaseAuth.getInstance()
     val passPattern = Pattern.compile("^" + ".{6,}" + "$")
     val emailPattern = Pattern.compile("[a-zA-Z0-9\\.\\_\\%\\-\\+]{1,256}" +
             "\\@" +
@@ -28,11 +27,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        initView()
-
-    }
-
-    private fun initView() {
         btn_login.setOnClickListener {
             blankField()
         }
@@ -61,13 +55,15 @@ class LoginActivity : AppCompatActivity() {
     private fun login() {
         val email = et_login_email.text.toString().trim()
         val password = et_login_pw.text.toString()
+        val auth = FirebaseAuth.getInstance()
+
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener() {
                 Toast.makeText(this, "Welcome back!", Toast.LENGTH_LONG).show()
                 HomeActivity.launchIntentClearTask(this)
             }
             .addOnFailureListener {
-                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, it.message.toString(), Toast.LENGTH_LONG).show()
             }
     }
 

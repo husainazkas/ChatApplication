@@ -2,7 +2,6 @@ package com.husainazkas.chatapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -16,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_chat_room.*
 
 class ChatRoomActivity : AppCompatActivity() {
 
+    lateinit var friend : UserData
     val adapter = GroupAdapter<ViewHolder>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,21 +32,21 @@ class ChatRoomActivity : AppCompatActivity() {
     }
 
     private fun loadDataMessage() {
-        val MyId = currentUser.uid
-        val FriendId = friend.uid
-        val messageRef = FirebaseDatabase.getInstance().getReference("/message/$MyId/$FriendId/")
+        val myId = currentUser.uid
+        val friendId = friend.uid
+        val messageRef = FirebaseDatabase.getInstance().getReference("/message/$myId/$friendId/")
 
         messageRef.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
@@ -62,7 +62,7 @@ class ChatRoomActivity : AppCompatActivity() {
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
-                TODO("Not yet implemented")
+
             }
 
         })
@@ -86,7 +86,8 @@ class ChatRoomActivity : AppCompatActivity() {
 
         messageDbReferenceMe.setValue(MessageData(id, fromId, text, toId, time))
             .addOnSuccessListener {
-                Toast.makeText(this, "Message has sent", Toast.LENGTH_LONG).show()
+                et_chat_room_text.setText("")
+                rv_chat_room.smoothScrollToPosition(adapter.itemCount -1)
                 messageDbReferenceFriend.setValue(
                     MessageData(id, fromId, text, toId, time)
                 )
@@ -102,7 +103,6 @@ class ChatRoomActivity : AppCompatActivity() {
 
     companion object {
 
-        lateinit var friend : UserData
         /*fun launchIntent(context: Context) {
             val intent = Intent(context, ChatRoomActivity::class.java)
             context.startActivity(intent)

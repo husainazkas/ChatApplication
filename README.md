@@ -1,5 +1,5 @@
 # Chat Application
-**ERROR DETECTED** on Android Version 5.1.
+**No Error Detected.**
 
 Changelog
 -------
@@ -40,5 +40,9 @@ Changelog
 
 ### Version 1.2.4 beta changelog :
 - Added recent chat from HomeActivity (on develop)
+
+### Version 1.2.5 changelog :
+- Finish build basic chat app
+- Recent chat from HomeActivity with Name and Profile Picture
 -------
 Please note if you made a change.

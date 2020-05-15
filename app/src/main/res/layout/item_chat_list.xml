@@ -38,13 +38,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:maxWidth="280dp"
+        android:maxWidth="220dp"
         android:maxHeight="20dp"
         android:text="@string/example_text"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/civ_home_display_pict"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/civ_home_display_pict"
         app:layout_constraintTop_toTopOf="@+id/civ_home_display_pict"
         app:layout_constraintVertical_bias="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl_vertical_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintGuide_percent="0.95"
+        android:orientation="vertical"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0.1dp"
+        android:background="#CDCDCD"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gl_vertical_list"
+        app:layout_constraintStart_toStartOf="@+id/tv_home_last_chat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

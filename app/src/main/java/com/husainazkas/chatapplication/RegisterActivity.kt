@@ -3,14 +3,16 @@ package com.husainazkas.chatapplication
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.view.View
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -21,8 +23,8 @@ import java.util.regex.Pattern
 
 class RegisterActivity : AppCompatActivity() {
 
-    val pickPhoto = 100
-    //val PICK_CAMERA = 101
+    private val SELECT_PHOTO = 100
+    private val PICK_CAMERA = 101
     var PHOTO_URI : Uri? = null
     val passPattern = Pattern.compile("^" + ".{6,}" + "$")
     val emailPattern = Pattern.compile("[a-zA-Z0-9\\.\\_\\%\\-\\+]{1,256}" +
@@ -40,6 +42,7 @@ class RegisterActivity : AppCompatActivity() {
 
         btn_register_ava.setOnClickListener {
             getPhotoFromFile()
+            //openCamera()
         }
         btn_register.setOnClickListener {
             emptyField()
@@ -49,14 +52,23 @@ class RegisterActivity : AppCompatActivity() {
     private fun getPhotoFromFile() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, pickPhoto)
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, SELECT_PHOTO)
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        if (intent.resolveActivity(this.packageManager) != null) {
+            startActivityForResult(intent, PICK_CAMERA)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == pickPhoto) {
-            if (resultCode == Activity.RESULT_OK && data!!.data != null){
+        if (requestCode == SELECT_PHOTO && resultCode == Activity.RESULT_OK) {
+            if (data!!.data != null){
                 PHOTO_URI = data.data
                 try {
                     PHOTO_URI.let {
@@ -76,6 +88,11 @@ class RegisterActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
+        }
+
+        if (requestCode == PICK_CAMERA && resultCode == Activity.RESULT_OK ) {
+            val takenByCamera = data?.extras?.get("data") as Bitmap
+            civ_register_ava.setImageBitmap(takenByCamera)
         }
     }
 
@@ -111,21 +128,25 @@ class RegisterActivity : AppCompatActivity() {
         val password = et_register_pw.text.toString()
         val auth = FirebaseAuth.getInstance()
 
-        Toast.makeText(this, "Registering your account. Please wait...", Toast.LENGTH_LONG).show()
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                uploadPhotoToFirebase()
-            }
-            .addOnFailureListener(this) {
-                Toast.makeText(this, it.message.toString(), Toast.LENGTH_LONG).show()
-            }
+        if (PHOTO_URI == null) {
+            Snackbar.make(btn_register, "Please select your photo", Snackbar.LENGTH_LONG).show()
+            return
+        } else {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    Snackbar.make(btn_register, "Registering your account. Please wait...", Snackbar.LENGTH_LONG).show()
+                    uploadPhotoToFirebase()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, it.message.toString(), Toast.LENGTH_LONG).show()
+                }
+        }
     }
 
     private fun uploadPhotoToFirebase() {
         val photoName = UUID.randomUUID().toString()
         val uploadToFirebase = FirebaseStorage.getInstance().getReference("/chatApp/images/$photoName")
 
-        if (PHOTO_URI != null) {
             uploadToFirebase.putFile(PHOTO_URI!!)
                 .addOnSuccessListener {
                     uploadToFirebase.downloadUrl.addOnSuccessListener {
@@ -133,9 +154,6 @@ class RegisterActivity : AppCompatActivity() {
                         saveAllUserToDatabase(it.toString())
                     }
                 }
-        } else {
-            Toast.makeText(this, "Please select your photo", Toast.LENGTH_LONG).show()
-        }
     }
 
     private fun saveAllUserToDatabase(photoUrl : String) {
@@ -148,7 +166,7 @@ class RegisterActivity : AppCompatActivity() {
             email = et_register_email.text.toString(),
             ava = photoUrl))
             .addOnSuccessListener {
-                Toast.makeText(this, "Register has been successful", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Welcome to Chat Application", Toast.LENGTH_LONG).show()
                 HomeActivity.launchIntentClearTask(this)
             }
             .addOnFailureListener {

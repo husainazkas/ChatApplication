@@ -3,7 +3,6 @@
     package="com.husainazkas.chatapplication">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -17,7 +16,9 @@
         <activity android:name=".ChatRoomActivity" />
         <activity
             android:name=".FriendListActivity"
-            android:label="Select Contact"/>
+            android:label="Select Contact">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/WithNoActionBar"/>
@@ -30,7 +31,6 @@
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

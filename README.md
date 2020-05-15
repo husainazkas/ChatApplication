@@ -44,5 +44,9 @@ Changelog
 ### Version 1.2.5 changelog :
 - Finish build basic chat app
 - Recent chat from HomeActivity with Name and Profile Picture
+
+### Version 1.2.6 changelog :
+- Optimize UI Design v1.1
+- Fix register algorythm
 -------
 Please note if you made a change.

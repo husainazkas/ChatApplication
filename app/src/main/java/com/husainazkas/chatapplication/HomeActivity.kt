@@ -13,6 +13,7 @@ import com.husainazkas.chatapplication.LoginActivity.Companion.currentUser
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_register.*
 
 class HomeActivity : AppCompatActivity() {
 
@@ -26,6 +27,9 @@ class HomeActivity : AppCompatActivity() {
 
         checkUserLoginAccount()
         recentChat()
+        fab_home_to_friend_list.setOnClickListener {
+            messageToFriend()
+        }
     }
 
     private fun checkUserLoginAccount() {
@@ -41,11 +45,12 @@ class HomeActivity : AppCompatActivity() {
 
         db.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
-
+                MainActivity.launchIntentClearTask(applicationContext)
             }
 
             override fun onDataChange(p0: DataSnapshot) {
                 currentUser = p0.getValue(UserData::class.java)!!
+                setTitle("Hello, ${currentUser.name}!")
             }
         })
     }
@@ -96,6 +101,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun messageToFriend() {
+        FriendListActivity.launchIntent(this)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu_home, menu)
         return super.onCreateOptionsMenu(menu)
@@ -103,8 +112,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_message ->{
-                messageToFriend()
+            R.id.nav_search ->{
+
             }
             R.id.nav_settings ->{
                 settings()
@@ -114,10 +123,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun messageToFriend() {
-        FriendListActivity.launchIntent(this)
     }
 
     private fun settings() {

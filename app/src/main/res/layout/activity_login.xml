@@ -38,6 +38,15 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_label_login" />
 
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:gravity="center"
+            android:text="@string/tv_label_register" />
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -77,11 +77,14 @@
             android:text="@string/btn_register" />
 
         <TextView
-            android:id="@+id/create_account"
+            android:id="@+id/tv_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:paddingTop="5dp"
+            android:gravity="center"
+            android:text="@string/tv_login"/>
 
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

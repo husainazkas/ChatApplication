@@ -47,6 +47,10 @@ class RegisterActivity : AppCompatActivity() {
         btn_register.setOnClickListener {
             emptyField()
         }
+
+        tv_login.setOnClickListener {
+            LoginActivity.launchIntent(this)
+        }
     }
 
     private fun getPhotoFromFile() {
@@ -177,6 +181,7 @@ class RegisterActivity : AppCompatActivity() {
     companion object {
         fun launchIntent(context: Context) {
             val intent = Intent(context, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT.or(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP)
             context.startActivity(intent)
         }
     }

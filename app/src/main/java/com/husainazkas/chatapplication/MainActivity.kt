@@ -20,17 +20,9 @@ class MainActivity : AppCompatActivity() {
         btn_main_login.setOnClickListener {
             LoginActivity.launchIntent(this)
         }
-        btn_main_register.setOnClickListener {
-            RegisterActivity.launchIntent(this)
-        }
     }
 
     companion object {
-
-        fun launchIntent(context: Context) {
-            val intent = Intent(context, MainActivity::class.java)
-            context.startActivity(intent)
-        }
         fun launchIntentClearTask(context: Context) {
             val intent = Intent(context, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK.or(Intent.FLAG_ACTIVITY_CLEAR_TASK)

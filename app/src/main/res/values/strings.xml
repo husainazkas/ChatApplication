@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Chat Application</string>
     <string name="btn_label_login">Login</string>
-    <string name="btn_label_register">Register</string>
     <string name="et_email">Email</string>
     <string name="et_pw">Password</string>
     <string name="btn_register">Sign Up</string>
@@ -15,4 +14,11 @@
     <string name="example_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="chat_room_send">Send</string>
     <string name="nav_home_settings">Settings</string>
+    <string name="send_message">Send</string>
+    <string name="tv_label_register">Don\'t have an account? Sign Up.</string>
+    <string name="tv_login">Already have an account? Sign in.</string>
+    <string name="main_title_1">Chat</string>
+    <string name="main_title_2">Application</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="search">Search</string>
 </resources>

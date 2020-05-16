@@ -1,5 +1,5 @@
 # Chat Application
-**No Error Detected.**
+**RELEASED FIRST BETA VERSION 1.2.7**
 
 Changelog
 -------
@@ -48,5 +48,13 @@ Changelog
 ### Version 1.2.6 changelog :
 - Optimize UI Design v1.1
 - Fix register algorythm
+
+### Version 1.2.7 Beta RELEASE changelog :
+- New icon launcher
+- New launcher design
+- Modified intent from LoginActivity to RegisterActivity
+- Improve ChatRoomActivity
+- Added Floating Action Bar refer to FriendList
+- Added search function (with no queries)
 -------
 Please note if you made a change.

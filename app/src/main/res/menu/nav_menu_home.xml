@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/nav_search"
         android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"
+        android:title="@string/search"
+        app:actionViewClass="android.widget.SearchView" />
     <group>
         <item android:id="@+id/nav_settings"
             android:title="@string/nav_home_settings"

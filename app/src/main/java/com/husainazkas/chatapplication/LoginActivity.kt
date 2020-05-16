@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 import org.w3c.dom.Text
 import java.util.regex.Pattern
 
@@ -29,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
 
         btn_login.setOnClickListener {
             blankField()
+        }
+        tv_register.setOnClickListener {
+            RegisterActivity.launchIntent(this)
         }
     }
 
@@ -57,6 +62,7 @@ class LoginActivity : AppCompatActivity() {
         val password = et_login_pw.text.toString()
         val auth = FirebaseAuth.getInstance()
 
+        Snackbar.make(btn_login, "Signing into your account. Please wait...", Snackbar.LENGTH_LONG).show()
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener() {
                 Toast.makeText(this, "Welcome back!", Toast.LENGTH_LONG).show()
@@ -71,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
         lateinit var currentUser : UserData
         fun launchIntent(context: Context) {
             val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP)
             context.startActivity(intent)
         }
     }

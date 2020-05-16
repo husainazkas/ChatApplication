@@ -1,7 +1,10 @@
 package com.husainazkas.chatapplication
 
+import android.app.SearchManager
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.isInvisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -25,10 +28,23 @@ class ChatRoomActivity : AppCompatActivity() {
         friend = intent.getParcelableExtra(FriendListActivity.FRIEND_KEY)!!
         supportActionBar!!.title = friend.name
 
+
         rv_chat_room.adapter = adapter
 
         initView()
 
+    }
+
+    private fun initView() {
+        loadDataMessage()
+        btn_chat_room_send.setOnClickListener {
+            val editText = et_chat_room_text.text
+            if (editText.isNullOrBlank()) {
+                et_chat_room_text.requestFocus()
+            } else {
+                sendMessage()
+            }
+        }
     }
 
     private fun loadDataMessage() {
@@ -58,6 +74,7 @@ class ChatRoomActivity : AppCompatActivity() {
                     } else {
                         adapter.add(AdapterChatFrom(messageCollection.text, friend))
                     }
+                    rv_chat_room.smoothScrollToPosition(adapter.itemCount -1)
                 }
             }
 
@@ -66,13 +83,6 @@ class ChatRoomActivity : AppCompatActivity() {
             }
 
         })
-    }
-
-    private fun initView() {
-        loadDataMessage()
-        btn_chat_room_send.setOnClickListener {
-            sendMessage()
-        }
     }
 
     private fun sendMessage() {
@@ -92,6 +102,7 @@ class ChatRoomActivity : AppCompatActivity() {
                     MessageData(id, fromId, text, toId, time)
                 )
             }
+
 
         val lastMessage = FirebaseDatabase.getInstance().getReference("/recent-message/$fromId/$toId/")
         val lastMessageTo = FirebaseDatabase.getInstance().getReference("/recent-message/$toId/$fromId/")

@@ -11,10 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_margin="20dp"
         android:src="@android:drawable/ic_dialog_email"
-        app:backgroundTint="@color/colorPrimary" />
+        app:backgroundTint="@color/colorPrimary"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_home_chat_list"

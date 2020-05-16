@@ -1,11 +1,13 @@
 package com.husainazkas.chatapplication
 
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -13,13 +15,12 @@ import com.husainazkas.chatapplication.LoginActivity.Companion.currentUser
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_register.*
 
 class HomeActivity : AppCompatActivity() {
 
-    val uid = FirebaseAuth.getInstance().uid
-    val adapter = GroupAdapter<ViewHolder>()
-    val hashMap = HashMap<String?, MessageData?>()
+    private val uid = FirebaseAuth.getInstance().uid
+    private val adapter = GroupAdapter<ViewHolder>()
+    private val hashMap = HashMap<String?, MessageData?>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
 
             override fun onDataChange(p0: DataSnapshot) {
                 currentUser = p0.getValue(UserData::class.java)!!
-                setTitle("Hello, ${currentUser.name}!")
+                title = "Hello, ${currentUser.name}!"
             }
         })
     }
@@ -107,14 +108,18 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.nav_menu_home, menu)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu!!.findItem(R.id.nav_search).actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_search ->{
-
-            }
+            /*R.id.nav_search ->{
+                search()
+            }*/
             R.id.nav_settings ->{
                 settings()
             }
@@ -124,6 +129,10 @@ class HomeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    /*private fun search() {
+
+    }*/
 
     private fun settings() {
 

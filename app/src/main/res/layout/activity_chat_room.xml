@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatRoomActivity">
+    <requestFocus/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8"/>
+        app:layout_constraintGuide_percent="0.85"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -30,17 +31,23 @@
         app:layout_constraintTop_toBottomOf="@id/guideline2"
         app:layout_constraintRight_toLeftOf="@id/guideline"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"/>
+        android:layout_marginEnd="8dp"
+        android:autofillHints="Type a message"
+        android:hint="@string/type_a_message"
+        android:inputType="textCapSentences" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_chat_room_send"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/chat_room_send"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fadingEdge="vertical"
+        android:src="@android:drawable/ic_menu_send"
+        android:background="@color/colorPrimary"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/guideline"
-        app:layout_constraintTop_toBottomOf="@id/guideline2"/>
+        app:layout_constraintTop_toBottomOf="@id/guideline2"
+        android:contentDescription="@string/send_message" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_horizontal_edit_text"
